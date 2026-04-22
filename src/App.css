@@ -1,0 +1,198 @@
+/* Reset general para asegurar fondo blanco en la página */
+body {
+  background-color: #f0f2f5;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  padding: 30px;
+  max-width: 600px;
+  margin: 20px auto;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background-color: #ffffff; /* Fondo blanco del contenedor */
+  border-radius: 8px;
+  border-top: 10px solid #e60000; /* Rojo como color secundario en el borde superior */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 1;
+}
+
+/* Marca de agua */
+.container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/logo-clinica.png'); 
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 280px;
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.title {
+  text-align: center;
+  color: #004a99; /* Azul predominante */
+  font-size: 24px;
+  margin-bottom: 30px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.form-section {
+  border: 1px solid #004a99; /* Bordes azules para las secciones */
+  border-radius: 6px;
+  padding: 20px;
+  margin-bottom: 25px;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.section-title {
+  font-weight: 700;
+  color: #004a99; /* Azul para títulos de sección */
+  font-size: 14px;
+  margin-bottom: 15px;
+  display: block;
+  border-bottom: 2px solid #e60000; /* Subrayado rojo */
+  padding-bottom: 5px;
+  text-transform: uppercase;
+}
+
+.form-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.field {
+  flex: 1;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  font-size: 12px;
+  color: #000000; /* Letras negras para las etiquetas */
+  margin-bottom: 6px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* Forzar fondo blanco y texto negro en inputs para evitar temas oscuros */
+input, select, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #004a99; /* Borde azul */
+  border-radius: 4px;
+  font-size: 15px;
+  box-sizing: border-box;
+  background-color: #ffffff !important; /* Fondo blanco forzado */
+  color: #000000 !important; /* Texto negro forzado */
+  font-weight: 500;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #e60000; /* Cambio a rojo al seleccionar */
+  outline: none;
+  box-shadow: 0 0 5px rgba(230, 0, 0, 0.2);
+}
+
+.submit-button {
+  width: 100%;
+  padding: 18px;
+  background-color: #004a99; /* Botón azul predominante */
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease;
+}
+
+.submit-button:hover:not(:disabled) {
+  background-color: #e60000; /* Hover rojo */
+}
+
+.submit-button:disabled {
+  background-color: #999999;
+  cursor: not-allowed;
+}
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 6px;
+  border-top: 8px solid #004a99;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+  width: 90%;
+  animation: modalFadeIn 0.3s ease;
+}
+
+.modal-content h2 {
+  color: #004a99;
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.modal-content p {
+  color: #1a1a1a;
+  font-size: 15px;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+
+.modal-button {
+  padding: 14px 24px;
+  background-color: #e60000;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.modal-button:hover {
+  background-color: #b30000;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
