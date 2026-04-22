@@ -54,7 +54,7 @@ function App() {
         </div>
       )}
       
-      <h1 className="title">GESTIÓN DE PACIENTES - CLÍNICA LA LUZ</h1>
+      <h1 className="title">SEGUIMIENTO DE PACIENTES ESTETICA</h1>
       
       <form onSubmit={handleSubmit}>
         <div className="form-section">
