@@ -57,7 +57,7 @@ function App() {
           <span className="section-title">DATOS DEL PACIENTE</span>
           <div className="form-row">
             <div className="field" style={{flex: 2}}>
-              <label>NOMBRES Y APELLIDOS</label>
+              <label>NOMBRE</label>
               <input name="nombre" value={formData.nombre} onChange={handleChange} required />
             </div>
             <div className="field">
