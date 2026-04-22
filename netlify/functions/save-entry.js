@@ -22,28 +22,42 @@ export const handler = async (event) => {
     const sheets = google.sheets({ version: 'v4', auth });
     const calendar = google.calendar({ version: 'v3', auth });
 
+    // Ejecución en paralelo para mayor velocidad
+    const promises = [];
+
+    // Promesa 1: Google Sheets (Columnas A a N)
     const sheetPromise = sheets.spreadsheets.values.append({
       spreadsheetId: process.env.SPREADSHEET_ID,
       range: '2026!A:N',
       valueInputOption: 'USER_ENTERED',
       requestBody: {
         values: [[
-          data.nombre, data.dni, data.edad, data.telefono, data.fecha,
-          data.procedimiento, data.cantidad, data.estadoPago, data.zona,
-          data.profesional, data.proximaSesion, data.procRealizar,
-          data.estadoRetoque, data.observaciones
+          data.nombre,          // A
+          data.dni,             // B
+          data.edad,            // C
+          data.telefono,        // D
+          data.fecha,           // E (Ahora manual/editable)
+          data.procedimiento,   // F
+          data.cantidad,        // G
+          data.estadoPago,      // H
+          data.zona,            // I
+          data.profesional,     // J
+          data.proximaSesion,   // K
+          data.procRealizar,    // L
+          data.estadoRetoque,   // M (Estado/Retoque)
+          data.observaciones    // N
         ]],
       },
     });
+    promises.push(sheetPromise);
 
-    const promises = [sheetPromise];
-
+    // Promesa 2: Google Calendar
     if (data.proximaSesion) {
       const calendarPromise = calendar.events.insert({
         calendarId: process.env.CALENDAR_ID,
         requestBody: {
           summary: `CITA: ${data.nombre}`,
-          description: `PROCEDIMIENTO: ${data.procRealizar}\nOBS: ${data.observaciones}`,
+          description: `PENDIENTE: ${data.procRealizar}\nOBS: ${data.observaciones}`,
           start: { date: data.proximaSesion },
           end: { date: data.proximaSesion },
         },
@@ -53,8 +67,15 @@ export const handler = async (event) => {
 
     await Promise.all(promises);
 
-    return { statusCode: 200, body: JSON.stringify({ message: "SUCCESS" }) };
+    return { 
+      statusCode: 200, 
+      body: JSON.stringify({ message: "SUCCESS" }) 
+    };
   } catch (error) {
-    return { statusCode: 500, body: JSON.stringify({ error: error.message }) };
+    console.error("ERROR:", error.message);
+    return { 
+      statusCode: 500, 
+      body: JSON.stringify({ error: error.message }) 
+    };
   }
 };

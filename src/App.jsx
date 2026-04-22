@@ -7,7 +7,7 @@ function App() {
   
   const initialFormState = {
     nombre: '', dni: '', edad: '', telefono: '',
-    fecha: new Date().toISOString().split('T')[0],
+    fecha: new Date().toLocaleDateString('sv-SE'), // Formato YYYY-MM-DD local
     procedimiento: '', cantidad: 1, estadoPago: 'Pagado',
     zona: '', profesional: 'Navarro', proximaSesion: '',
     procRealizar: '', estadoRetoque: 'Pendiente', observaciones: ''
@@ -38,51 +38,53 @@ function App() {
     setLoading(false);
   };
 
-  const closeModal = () => {
-    setShowModal(false);
-  };
-
   return (
     <div className="container">
       {showModal && (
         <div className="modal-overlay">
           <div className="modal-content">
             <h2>REGISTRO EXITOSO</h2>
-            <p>La información del paciente fue procesada en la base de datos y calendario.</p>
-            <button onClick={closeModal} className="modal-button">ENTENDIDO</button>
+            <p>La información ha sido guardada en el Excel y el calendario correctamente.</p>
+            <button onClick={() => setShowModal(false)} className="modal-button">ENTENDIDO</button>
           </div>
         </div>
       )}
       
-      <h1 className="title">SEGUIMIENTO DE PACIENTES ESTETICA</h1>
+      <h1 className="title">SISTEMA MÉDICO - DERMATOLOGÍA</h1>
       
       <form onSubmit={handleSubmit}>
         <div className="form-section">
-          <span className="section-title">DATOS PERSONALES</span>
-          <div className="full-width">
-            <label>NOMBRES Y APELLIDOS</label>
-            <input name="nombre" value={formData.nombre} onChange={handleChange} required />
+          <span className="section-title">DATOS DEL PACIENTE</span>
+          <div className="form-row">
+            <div className="field" style={{flex: 2}}>
+              <label>NOMBRES Y APELLIDOS</label>
+              <input name="nombre" value={formData.nombre} onChange={handleChange} required />
+            </div>
+            <div className="field">
+              <label>FECHA DE REGISTRO</label>
+              <input type="date" name="fecha" value={formData.fecha} onChange={handleChange} />
+            </div>
           </div>
           <div className="form-row">
             <div className="field">
-              <label>DNI</label>
+              <label>DNI / CE</label>
               <input name="dni" value={formData.dni} onChange={handleChange} />
             </div>
             <div className="field">
               <label>EDAD</label>
               <input name="edad" type="number" value={formData.edad} onChange={handleChange} />
             </div>
-          </div>
-          <div className="full-width">
-            <label>TELÉFONO</label>
-            <input name="telefono" value={formData.telefono} onChange={handleChange} />
+            <div className="field">
+              <label>TELÉFONO</label>
+              <input name="telefono" value={formData.telefono} onChange={handleChange} />
+            </div>
           </div>
         </div>
 
         <div className="form-section">
-          <span className="section-title">INFORMACIÓN DEL PROCEDIMIENTO</span>
+          <span className="section-title">DETALLES DEL SERVICIO</span>
           <div className="full-width">
-            <label>PROCEDIMIENTO</label>
+            <label>PROCEDIMIENTO REALIZADO</label>
             <input name="procedimiento" value={formData.procedimiento} onChange={handleChange} />
           </div>
           <div className="form-row">
@@ -109,32 +111,40 @@ function App() {
               <input name="cantidad" type="number" value={formData.cantidad} onChange={handleChange} />
             </div>
             <div className="field">
-              <label>ZONA</label>
+              <label>ZONA TRATADA</label>
               <input name="zona" value={formData.zona} onChange={handleChange} />
             </div>
           </div>
         </div>
 
         <div className="form-section">
-          <span className="section-title" style={{color: '#e60000', borderColor: '#e60000'}}>CITAS Y SEGUIMIENTO</span>
+          <span className="section-title" style={{color: '#e60000', borderColor: '#e60000'}}>SEGUIMIENTO Y RETOQUES</span>
           <div className="form-row">
             <div className="field">
               <label>PRÓXIMA SESIÓN</label>
               <input type="date" name="proximaSesion" value={formData.proximaSesion} onChange={handleChange} style={{borderColor: '#e60000'}} />
             </div>
             <div className="field">
-              <label>PROCEDIMIENTO A REALIZAR</label>
-              <input name="procRealizar" value={formData.procRealizar} onChange={handleChange} />
+              <label>ESTADO / RETOQUE</label>
+              <select name="estadoRetoque" value={formData.estadoRetoque} onChange={handleChange}>
+                <option value="Pendiente">PENDIENTE</option>
+                <option value="Realizado">REALIZADO</option>
+                <option value="No aplica">NO APLICA</option>
+              </select>
             </div>
           </div>
           <div className="full-width">
-            <label>OBSERVACIONES</label>
+            <label>PROCEDIMIENTO PENDIENTE</label>
+            <input name="procRealizar" value={formData.procRealizar} onChange={handleChange} />
+          </div>
+          <div className="full-width">
+            <label>OBSERVACIONES ADICIONALES</label>
             <textarea name="observaciones" rows="2" value={formData.observaciones} onChange={handleChange}></textarea>
           </div>
         </div>
 
         <button type="submit" className="submit-button" disabled={loading}>
-          {loading ? 'PROCESANDO REGISTRO...' : 'REGISTRAR INFORMACIÓN'}
+          {loading ? 'ENVIANDO DATOS...' : 'GUARDAR REGISTRO'}
         </button>
       </form>
     </div>
