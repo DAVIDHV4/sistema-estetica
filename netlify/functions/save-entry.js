@@ -8,6 +8,13 @@ export const handler = async (event) => {
   try {
     const data = JSON.parse(event.body);
 
+    // NUEVO: Convertir todos los campos de texto a MAYÚSCULAS
+    for (let key in data) {
+      if (typeof data[key] === 'string') {
+        data[key] = data[key].toUpperCase();
+      }
+    }
+
     const auth = new google.auth.GoogleAuth({
       credentials: {
         client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
