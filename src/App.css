@@ -27,16 +27,6 @@ body {
   box-sizing: border-box;
 }
 
-.header-logo {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.logo-img {
-  max-width: 250px;
-  height: auto;
-}
-
 .title {
   text-align: center;
   color: var(--primary-color);
@@ -107,29 +97,6 @@ input:focus, select:focus, textarea:focus {
 
 textarea {
   resize: vertical;
-}
-
-.profesional-checkbox-group {
-  display: flex;
-  gap: 15px;
-  margin-top: 8px;
-  flex-wrap: wrap;
-}
-
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-weight: 700;
-  cursor: pointer;
-  font-size: 14px;
-  color: #000000;
-}
-
-.checkbox-label input[type="checkbox"] {
-  width: auto;
-  margin: 0;
-  padding: 0;
 }
 
 .accent-red {
@@ -211,10 +178,6 @@ textarea {
     box-shadow: none;
   }
 
-  .logo-img {
-    max-width: 200px;
-  }
-
   .title {
     font-size: 22px;
     margin-bottom: 25px;
@@ -233,12 +196,6 @@ textarea {
 
   .field {
     width: 100%;
-  }
-
-  .profesional-checkbox-group {
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 5px;
   }
 
   input, select, textarea {
