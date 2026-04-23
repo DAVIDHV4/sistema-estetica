@@ -60,26 +60,39 @@ body {
   display: flex;
   gap: 15px;
   margin-bottom: 15px;
+  width: 100%;
 }
 
 .field {
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
-.flex-2 { flex: 2; }
-.full-width { display: flex; flex-direction: column; margin-bottom: 15px; }
+.flex-2 { 
+  flex: 2; 
+}
+
+.full-width { 
+  display: flex; 
+  flex-direction: column; 
+  margin-bottom: 15px; 
+  width: 100%;
+}
 
 label {
   font-size: 12px;
   font-weight: 700;
   margin-bottom: 6px;
   color: #000000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 input, select, textarea {
-  padding: 12px 15px;
+  padding: 0 15px;
   border: 1px solid var(--border-color);
   border-radius: 4px;
   font-size: 14px;
@@ -88,15 +101,23 @@ input, select, textarea {
   transition: border-color 0.2s;
   box-sizing: border-box;
   width: 100%;
-}
-
-input:focus, select:focus, textarea:focus {
-  outline: none;
-  border-color: var(--primary-color);
+  height: 46px;
+  font-family: inherit;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
 textarea {
+  padding: 12px 15px;
   resize: vertical;
+  height: auto;
+  min-height: 80px;
+}
+
+input[type="date"], input[type="time"] {
+  display: flex;
+  align-items: center;
 }
 
 .accent-red {
@@ -157,8 +178,18 @@ textarea {
   border-top: 8px solid var(--primary-color);
 }
 
-.modal-content h2 { color: var(--primary-color); margin-top: 0; font-size: 20px; }
-.modal-content p { color: #000000; margin-bottom: 25px; font-size: 14px; line-height: 1.4; }
+.modal-content h2 { 
+  color: var(--primary-color); 
+  margin-top: 0; 
+  font-size: 20px; 
+}
+
+.modal-content p { 
+  color: #000000; 
+  margin-bottom: 25px; 
+  font-size: 14px; 
+  line-height: 1.4; 
+}
 
 .modal-button {
   padding: 14px 24px;
@@ -198,9 +229,13 @@ textarea {
     width: 100%;
   }
 
-  input, select, textarea {
+  input, select {
     font-size: 16px;
-    padding: 14px 15px;
+    height: 50px;
+  }
+  
+  textarea {
+    font-size: 16px;
   }
 
   .section-title {
