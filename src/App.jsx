@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
+import { listaProcedimientos } from './procedimientos';
+import { listaProfesionales } from './profesionales';
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -7,10 +9,11 @@ function App() {
   
   const initialFormState = {
     nombre: '', dni: '', edad: '', telefono: '',
-    fecha: new Date().toLocaleDateString('sv-SE'), // Formato YYYY-MM-DD local
-    procedimiento: '', cantidad: 1, estadoPago: 'Pagado',
-    zona: '', profesional: 'Navarro', proximaSesion: '',
-    procRealizar: '', estadoRetoque: 'Pendiente', observaciones: ''
+    fecha: new Date().toLocaleDateString('sv-SE'),
+    procedimiento: '', cantidad: 1, estadoPago: 'PAGADO',
+    zona: '', profesional: [''], 
+    proximaSesion: '',
+    hora: '', procRealizar: '', estadoRetoque: 'PENDIENTE', observaciones: ''
   };
   
   const [formData, setFormData] = useState(initialFormState);
@@ -19,14 +22,40 @@ function App() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleProfesionalChange = (index, value) => {
+    const nuevosProfesionales = [...formData.profesional];
+    nuevosProfesionales[index] = value;
+    setFormData({ ...formData, profesional: nuevosProfesionales });
+  };
+
+  const agregarProfesional = () => {
+    setFormData({ ...formData, profesional: [...formData.profesional, ''] });
+  };
+
+  const quitarProfesional = (index) => {
+    const nuevosProfesionales = formData.profesional.filter((_, i) => i !== index);
+    setFormData({ ...formData, profesional: nuevosProfesionales });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    
+    const profesionalesValidos = formData.profesional.filter(p => p.trim() !== '');
+    const profesionalesFormateados = profesionalesValidos
+      .map(p => p.trim().toUpperCase())
+      .join(' Y ');
+
+    const dataToSend = {
+      ...formData,
+      profesional: profesionalesFormateados
+    };
+
     try {
       const response = await fetch('/.netlify/functions/save-entry', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(dataToSend),
       });
       if (response.ok) {
         setShowModal(true);
@@ -50,14 +79,14 @@ function App() {
         </div>
       )}
       
-      <h1 className="title">SISTEMA MÉDICO - DERMATOLOGÍA</h1>
+      <h1 className="title">SEGUIMIENTOS ESTETICA</h1>
       
       <form onSubmit={handleSubmit}>
         <div className="form-section">
           <span className="section-title">DATOS DEL PACIENTE</span>
           <div className="form-row">
-            <div className="field" style={{flex: 2}}>
-              <label>NOMBRE</label>
+            <div className="field flex-2">
+              <label>NOMBRES Y APELLIDOS</label>
               <input name="nombre" value={formData.nombre} onChange={handleChange} required />
             </div>
             <div className="field">
@@ -83,29 +112,26 @@ function App() {
 
         <div className="form-section">
           <span className="section-title">DETALLES DEL SERVICIO</span>
+          
           <div className="full-width">
             <label>PROCEDIMIENTO REALIZADO</label>
-            <input name="procedimiento" value={formData.procedimiento} onChange={handleChange} />
+            <input list="procedimientos-list" name="procedimiento" value={formData.procedimiento} onChange={handleChange} />
+            <datalist id="procedimientos-list">
+              {listaProcedimientos.map((proc, index) => (
+                <option key={index} value={proc} />
+              ))}
+            </datalist>
           </div>
+
           <div className="form-row">
             <div className="field">
               <label>ESTADO DE PAGO</label>
               <select name="estadoPago" value={formData.estadoPago} onChange={handleChange}>
-                <option value="Pagado">PAGADO</option>
-                <option value="Pendiente">PENDIENTE</option>
-                <option value="Consulta gratis">CONSULTA GRATIS</option>
+                <option value="PAGADO">PAGADO</option>
+                <option value="PENDIENTE">PENDIENTE</option>
+                <option value="CONSULTA GRATIS">CONSULTA GRATIS</option>
               </select>
             </div>
-            <div className="field">
-              <label>PROFESIONAL</label>
-              <select name="profesional" value={formData.profesional} onChange={handleChange}>
-                <option value="Navarro">NAVARRO</option>
-                <option value="Burgos">BURGOS</option>
-                <option value="Sherley">SHERLEY</option>
-              </select>
-            </div>
-          </div>
-          <div className="form-row">
             <div className="field">
               <label>CANTIDAD</label>
               <input name="cantidad" type="number" value={formData.cantidad} onChange={handleChange} />
@@ -115,31 +141,89 @@ function App() {
               <input name="zona" value={formData.zona} onChange={handleChange} />
             </div>
           </div>
+
+          <div className="full-width">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <label style={{ margin: 0 }}>PROFESIONAL(ES)</label>
+              <button 
+                type="button" 
+                onClick={agregarProfesional}
+                style={{
+                  backgroundColor: '#004a99', color: '#ffffff', border: 'none', 
+                  borderRadius: '4px', padding: '6px 12px', cursor: 'pointer', 
+                  fontWeight: 'bold', fontSize: '12px'
+                }}
+              >
+                + AÑADIR MÉDICO
+              </button>
+            </div>
+            
+            <datalist id="profesionales-list">
+              {listaProfesionales.map((pro, index) => (
+                <option key={index} value={pro} />
+              ))}
+            </datalist>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {formData.profesional.map((prof, index) => (
+                <div key={index} style={{ display: 'flex', gap: '10px' }}>
+                  <input 
+                    list="profesionales-list"
+                    value={prof} 
+                    onChange={(e) => handleProfesionalChange(index, e.target.value)} 
+                    placeholder="SELECCIONAR O ESCRIBIR..."
+                    required={index === 0}
+                    style={{ flex: 1 }}
+                  />
+                  {formData.profesional.length > 1 && (
+                    <button 
+                      type="button" 
+                      onClick={() => quitarProfesional(index)}
+                      style={{
+                        backgroundColor: '#e60000', color: '#ffffff', border: 'none', 
+                        borderRadius: '4px', width: '42px', cursor: 'pointer', 
+                        fontWeight: 'bold', fontSize: '16px', display: 'flex', 
+                        justifyContent: 'center', alignItems: 'center'
+                      }}
+                    >
+                      X
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
-        <div className="form-section">
-          <span className="section-title" style={{color: '#e60000', borderColor: '#e60000'}}>SEGUIMIENTO Y RETOQUES</span>
+        <div className="form-section accent-red">
+          <span className="section-title">SEGUIMIENTO Y CITAS</span>
           <div className="form-row">
             <div className="field">
-              <label>PRÓXIMA SESIÓN</label>
-              <input type="date" name="proximaSesion" value={formData.proximaSesion} onChange={handleChange} style={{borderColor: '#e60000'}} />
+              <label>PRÓXIMA SESIÓN (FECHA)</label>
+              <input type="date" name="proximaSesion" value={formData.proximaSesion} onChange={handleChange} />
             </div>
+            <div className="field">
+              <label>HORA DE LA CITA</label>
+              <input type="time" name="hora" value={formData.hora} onChange={handleChange} />
+            </div>
+          </div>
+          <div className="form-row">
             <div className="field">
               <label>ESTADO / RETOQUE</label>
               <select name="estadoRetoque" value={formData.estadoRetoque} onChange={handleChange}>
-                <option value="Pendiente">PENDIENTE</option>
-                <option value="Realizado">REALIZADO</option>
-                <option value="No aplica">NO APLICA</option>
+                <option value="PENDIENTE">PENDIENTE</option>
+                <option value="ASISTIO">ASISTIO</option>
+                <option value="NO APLICA">NO APLICA</option>
               </select>
+            </div>
+            <div className="field flex-2">
+              <label>PROCEDIMIENTO PENDIENTE</label>
+              <input list="procedimientos-list" name="procRealizar" value={formData.procRealizar} onChange={handleChange} />
             </div>
           </div>
           <div className="full-width">
-            <label>PROCEDIMIENTO PENDIENTE</label>
-            <input name="procRealizar" value={formData.procRealizar} onChange={handleChange} />
-          </div>
-          <div className="full-width">
             <label>OBSERVACIONES ADICIONALES</label>
-            <textarea name="observaciones" rows="2" value={formData.observaciones} onChange={handleChange}></textarea>
+            <textarea name="observaciones" rows="3" value={formData.observaciones} onChange={handleChange}></textarea>
           </div>
         </div>
 
